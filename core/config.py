@@ -42,6 +42,11 @@ class Settings(BaseSettings):
         """Convert comma-separated string to list"""
         return [origin.strip() for origin in self.ALLOWED_ORIGINS.split(",")]
     
+    # Jira Configuration
+    JIRA_SERVER: str = ""
+    JIRA_EMAIL: str = ""
+    JIRA_API_TOKEN: str = ""
+    
     # Monitoring
     ENABLE_METRICS: bool = True
     LOG_LEVEL: str = "INFO"

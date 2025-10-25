@@ -78,9 +78,17 @@ export default function Agents() {
                 <Bot className="w-6 h-6 text-primary-600" />
               </div>
               <div className="flex items-center gap-2">
-                <span className="px-3 py-1 text-xs font-semibold text-purple-700 bg-purple-100 rounded-full border border-purple-200">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    // Deploy logic here
+                    console.log('Deploy agent:', agent.id)
+                  }}
+                  className="px-3 py-1 text-xs font-semibold text-purple-700 bg-purple-100 rounded-full border border-purple-200 hover:bg-purple-600 hover:text-white hover:border-purple-700 transition-all cursor-pointer shadow-sm hover:shadow-md active:scale-95"
+                  title="Deploy Agent"
+                >
                   {agent.status === 'active' ? 'deploy' : agent.status}
-                </span>
+                </button>
                 <Link
                   to={`/agents/${agent.id}/edit`}
                   onClick={(e) => e.stopPropagation()}
