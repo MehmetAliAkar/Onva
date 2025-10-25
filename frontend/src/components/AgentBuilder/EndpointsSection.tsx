@@ -16,9 +16,10 @@ interface Endpoint {
 interface EndpointsSectionProps {
   endpoints: Endpoint[]
   onChange: (endpoints: Endpoint[]) => void
+  agentId?: string
 }
 
-export default function EndpointsSection({ endpoints, onChange }: EndpointsSectionProps) {
+export default function EndpointsSection({ endpoints, onChange, agentId }: EndpointsSectionProps) {
   const [isAdding, setIsAdding] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState<Partial<Endpoint>>({

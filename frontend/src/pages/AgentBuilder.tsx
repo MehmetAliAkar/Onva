@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Save, Bot } from 'lucide-react'
 import { toast } from 'sonner'
+import { useNavigate } from 'react-router-dom'
 // Update the import path below to match the actual location and filename (case-sensitive)
 import PersonaSection from '../components/AgentBuilder/PersonaSection'
 // For example, if the file is named 'personaSection.tsx', use:
@@ -10,7 +11,10 @@ import DocumentsSection from '../components/AgentBuilder/DocumentsSection'
 import EndpointsSection from '../components/AgentBuilder/EndpointsSection'
 
 export default function AgentBuilder() {
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<'persona' | 'documents' | 'endpoints'>('persona')
+  const [isLoading, setIsLoading] = useState(false)
+  const [agentId, setAgentId] = useState<string | null>(null)
   // Define types for agentData
   type PersonaType = {
     role: string
@@ -22,11 +26,11 @@ export default function AgentBuilder() {
   type DocumentType = {
       id: string
       name: string
-      content: string
       type: string
       size: number
-      status: string
+      status: 'uploading' | 'processing' | 'ready' | 'error'
       uploadedAt: string
+      file?: File
     }
 
   type Endpoint = {
@@ -65,11 +69,94 @@ export default function AgentBuilder() {
   ]
 
   const handleSave = async () => {
+    // Validate required fields
+    if (!agentData.name.trim()) {
+      toast.error('Agent name is required')
+      return
+    }
+
+    if (!agentData.description.trim()) {
+      toast.error('Agent description is required')
+      return
+    }
+
+    if (!agentData.persona.role.trim()) {
+      toast.error('Agent role is required')
+      return
+    }
+
+    setIsLoading(true)
     try {
-      // API call will be added here
+      let currentAgentId = agentId
+
+      // Create agent if not exists
+      if (!currentAgentId) {
+        const response = await fetch('http://localhost:8000/api/v1/agents', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: agentData.name,
+            description: agentData.description,
+            persona_role: agentData.persona.role,
+            persona_tone: agentData.persona.tone,
+            persona_instructions: agentData.persona.instructions,
+            persona_constraints: agentData.persona.constraints,
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error('Failed to create agent')
+        }
+
+        const createdAgent = await response.json()
+        currentAgentId = createdAgent.id
+        setAgentId(currentAgentId)
+      }
+
+      // Upload documents if any
+      if (agentData.documents.length > 0) {
+        for (const doc of agentData.documents) {
+          if (doc.file) {
+            const formData = new FormData()
+            formData.append('file', doc.file)
+
+            await fetch(`http://localhost:8000/api/v1/agents/${currentAgentId}/documents`, {
+              method: 'POST',
+              body: formData,
+            })
+          }
+        }
+      }
+
+      // Add endpoints if any
+      if (agentData.endpoints.length > 0) {
+        for (const endpoint of agentData.endpoints) {
+          await fetch(`http://localhost:8000/api/v1/agents/${currentAgentId}/endpoints`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              name: endpoint.name,
+              description: endpoint.description,
+              url: endpoint.url,
+              method: endpoint.method,
+              request_example: endpoint.requestExample,
+              response_example: endpoint.responseExample,
+            }),
+          })
+        }
+      }
+
       toast.success('Agent saved successfully!')
+      navigate('/agents')
     } catch (error) {
+      console.error('Error saving agent:', error)
       toast.error('Failed to save agent')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -85,10 +172,11 @@ export default function AgentBuilder() {
         </div>
         <button
           onClick={handleSave}
-          className="btn btn-primary flex items-center space-x-2"
+          disabled={isLoading}
+          className="btn btn-primary flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Save className="w-5 h-5" />
-          <span>Save Agent</span>
+          <span>{isLoading ? 'Saving...' : 'Save Agent'}</span>
         </button>
       </div>
 
@@ -148,13 +236,15 @@ export default function AgentBuilder() {
         {activeTab === 'documents' && (
             <DocumentsSection
             documents={agentData.documents}
-            onChange={(documents: DocumentType[]) => setAgentData({ ...agentData, documents })}
+            onChange={(documents) => setAgentData({ ...agentData, documents })}
+            agentId={agentId || undefined}
           />
         )}
         {activeTab === 'endpoints' && (
           <EndpointsSection
             endpoints={agentData.endpoints}
             onChange={(endpoints) => setAgentData({ ...agentData, endpoints })}
+            agentId={agentId || undefined}
           />
         )}
       </div>

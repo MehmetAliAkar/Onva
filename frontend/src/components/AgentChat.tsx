@@ -11,7 +11,7 @@ interface Message {
 
 interface AgentChatProps {
   agent: {
-    id: number
+    id: string | number
     name: string
     description: string
   }
@@ -55,14 +55,13 @@ export default function AgentChat({ agent, onClose }: AgentChatProps) {
 
     try {
       // Call backend API
-      const response = await fetch('http://localhost:8000/api/v1/agent/chat', {
+      const response = await fetch(`http://localhost:8000/api/v1/agents/${agent.id}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           message: userMessage.content,
-          agent_id: agent.id,
         }),
       })
 

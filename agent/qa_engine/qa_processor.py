@@ -20,6 +20,51 @@ class QAProcessor:
         self.conversation_history: Dict[str, List[Dict]] = {}
         logger.info("QAProcessor initialized with Groq")
     
+    def process_query(
+        self,
+        query: str,
+        context: Optional[str] = None,
+        system_prompt: Optional[str] = None
+    ) -> str:
+        """
+        Process a query with optional context and system prompt
+        
+        Args:
+            query: User's question
+            context: Relevant context from documents
+            system_prompt: Custom system prompt for the agent
+            
+        Returns:
+            Generated response
+        """
+        try:
+            # Build messages
+            messages = []
+            
+            if system_prompt:
+                messages.append({"role": "system", "content": system_prompt})
+            
+            # Add context to user message if available
+            user_message = query
+            if context:
+                user_message = f"Context:\n{context}\n\nQuestion: {query}"
+            
+            messages.append({"role": "user", "content": user_message})
+            
+            # Call Groq API
+            response = self.client.chat.completions.create(
+                model=settings.GROQ_MODEL,
+                messages=messages,
+                temperature=0.7,
+                max_tokens=1000
+            )
+            
+            return response.choices[0].message.content
+            
+        except Exception as e:
+            logger.error(f"Error processing query: {str(e)}")
+            return "I apologize, but I encountered an error processing your request. Please try again."
+    
     async def process_question(
         self,
         question: str,

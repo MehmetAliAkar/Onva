@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     RATE_LIMIT_WINDOW: int = 60
     
     # CORS
-    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:8000"
+    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:8000"
     
     @property
     def allowed_origins_list(self) -> list[str]:

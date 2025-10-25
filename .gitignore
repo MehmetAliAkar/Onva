@@ -72,6 +72,11 @@ pnpm-lock.yaml
 # Project specific
 data/raw/*
 data/processed/*
+data/agents/*
+data/chroma/*
 !data/.gitkeep
+!data/agents/.gitkeep
+!data/chroma/.gitkeep
 uploads/*
 !uploads/.gitkeep
+test_document.txt

@@ -1,32 +1,36 @@
 import { Bot, Plus, Settings } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import AgentChat from '../components/AgentChat'
+import { toast } from 'sonner'
 
 export default function Agents() {
   const [selectedAgent, setSelectedAgent] = useState<any>(null)
+  const [agents, setAgents] = useState<any[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
-  // Placeholder data - will be replaced with API data
-  const agents = [
-    {
-      id: 1,
-      name: 'Analytics Pro Agent',
-      description: 'Helps customers understand analytics features',
-      status: 'active',
-      documents: 12,
-      endpoints: 8,
-      createdAt: '2025-10-20',
-    },
-    {
-      id: 2,
-      name: 'CRM Support Agent',
-      description: 'Assists with CRM integration and setup',
-      status: 'active',
-      documents: 8,
-      endpoints: 15,
-      createdAt: '2025-10-18',
-    },
-  ]
+  useEffect(() => {
+    fetchAgents()
+  }, [])
+
+  const fetchAgents = async () => {
+    try {
+      setIsLoading(true)
+      const response = await fetch('http://localhost:8000/api/v1/agents')
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch agents')
+      }
+
+      const data = await response.json()
+      setAgents(data)
+    } catch (error) {
+      console.error('Error fetching agents:', error)
+      toast.error('Failed to load agents')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -47,7 +51,22 @@ export default function Agents() {
       </div>
 
       {/* Agents Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        </div>
+      ) : agents.length === 0 ? (
+        <div className="text-center py-12">
+          <Bot className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No agents yet</h3>
+          <p className="text-gray-600 mb-4">Create your first agent to get started</p>
+          <Link to="/agents/new" className="btn btn-primary inline-flex items-center space-x-2">
+            <Plus className="w-5 h-5" />
+            <span>Create Agent</span>
+          </Link>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {agents.map((agent) => (
           <div
             key={agent.id}
@@ -83,11 +102,11 @@ export default function Agents() {
             <div className="flex items-center justify-between text-sm text-gray-500 pt-4 border-t border-gray-100">
               <span className="flex items-center gap-1">
                 <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                {agent.documents} docs
+                {agent.document_count || 0} docs
               </span>
               <span className="flex items-center gap-1">
                 <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-                {agent.endpoints} endpoints
+                {agent.endpoint_count || 0} endpoints
               </span>
             </div>
 
@@ -98,7 +117,8 @@ export default function Agents() {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
 
       {/* Chat Modal */}
       {selectedAgent && (

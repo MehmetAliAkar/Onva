@@ -10,21 +10,22 @@ interface Document {
   size: number
   status: 'uploading' | 'processing' | 'ready' | 'error'
   uploadedAt: string
+  file?: File // Keep the actual file for upload
 }
 
 interface DocumentsSectionProps {
   documents: Document[]
   onChange: (documents: Document[]) => void
+  agentId?: string // Optional agent ID for API upload
 }
 
-export default function DocumentsSection({ documents, onChange }: DocumentsSectionProps) {
+export default function DocumentsSection({ documents, onChange, agentId }: DocumentsSectionProps) {
   const [uploading, setUploading] = useState(false)
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     setUploading(true)
     
     try {
-      // Simulate upload and processing
       const newDocuments = acceptedFiles.map(file => ({
         id: Math.random().toString(36).substr(2, 9),
         name: file.name,
@@ -32,25 +33,59 @@ export default function DocumentsSection({ documents, onChange }: DocumentsSecti
         size: file.size,
         status: 'uploading' as const,
         uploadedAt: new Date().toISOString(),
+        file, // Store the file for later upload
       }))
 
       onChange([...documents, ...newDocuments])
 
-      // Simulate processing
-      setTimeout(() => {
-        onChange([
-          ...documents,
-          ...newDocuments.map(doc => ({ ...doc, status: 'ready' as const }))
-        ])
+      // If agent exists, upload immediately
+      if (agentId) {
+        for (const doc of newDocuments) {
+          if (doc.file) {
+            try {
+              const formData = new FormData()
+              formData.append('file', doc.file)
+
+              const response = await fetch(`http://localhost:8000/api/v1/agents/${agentId}/documents`, {
+                method: 'POST',
+                body: formData,
+              })
+
+              if (!response.ok) {
+                throw new Error('Upload failed')
+              }
+
+              // Update document status to ready
+              onChange([...documents, ...newDocuments.map(d => 
+                d.id === doc.id ? { ...d, status: 'ready' as const } : d
+              )])
+            } catch (error) {
+              // Update document status to error
+              onChange([...documents, ...newDocuments.map(d => 
+                d.id === doc.id ? { ...d, status: 'error' as const } : d
+              )])
+              toast.error(`Failed to upload ${doc.name}`)
+            }
+          }
+        }
         toast.success(`${acceptedFiles.length} document(s) uploaded successfully`)
-      }, 2000)
+      } else {
+        // No agent yet, just mark as ready for later upload
+        setTimeout(() => {
+          onChange([
+            ...documents,
+            ...newDocuments.map(doc => ({ ...doc, status: 'ready' as const }))
+          ])
+          toast.success(`${acceptedFiles.length} document(s) added`)
+        }, 500)
+      }
 
     } catch (error) {
-      toast.error('Failed to upload documents')
+      toast.error('Failed to process documents')
     } finally {
       setUploading(false)
     }
-  }, [documents, onChange])
+  }, [documents, onChange, agentId])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
