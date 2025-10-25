@@ -78,8 +78,8 @@ export default function Agents() {
                 <Bot className="w-6 h-6 text-primary-600" />
               </div>
               <div className="flex items-center gap-2">
-                <span className="px-3 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full border border-green-200">
-                  {agent.status}
+                <span className="px-3 py-1 text-xs font-semibold text-purple-700 bg-purple-100 rounded-full border border-purple-200">
+                  {agent.status === 'active' ? 'deploy' : agent.status}
                 </span>
                 <Link
                   to={`/agents/${agent.id}/edit`}
