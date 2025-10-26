@@ -8,7 +8,6 @@ from contextlib import asynccontextmanager
 import time
 
 from api.routes import agent, products, analytics, agents
-from api.routes import jira as jira_routes
 from core.config import settings
 from core.logging import setup_logging
 
@@ -28,7 +27,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="SaaS Product Agent Platform",
-    description="Akıllı ürün satış ve destek agent platformu",
+    description="Agent platform for third-party SaaS products",
     version="1.0.0",
     lifespan=lifespan,
     docs_url="/docs",
@@ -80,7 +79,6 @@ app.include_router(agent.router, prefix="/api/v1/agent", tags=["Agent"])
 app.include_router(agents.router, prefix="/api/v1", tags=["Agents Management"])
 app.include_router(products.router, prefix="/api/v1/products", tags=["Products"])
 app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["Analytics"])
-app.include_router(jira_routes.router, prefix="/api/v1", tags=["Jira Integration"])
 
 
 @app.get("/")
