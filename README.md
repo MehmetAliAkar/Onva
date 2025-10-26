@@ -1,5 +1,3 @@
-# Llama Meta Hackathon
-
 # Onva – Agent Üretim Platformu
 
 SaaS ürünleri için akıllı destek ve konfigurasyon agent'ları oluşturmanızı sağlayan platform.
