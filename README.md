@@ -74,8 +74,8 @@ Onvo/
 ## 🚀 Kurulum
 ```bash
 # Depoyu klonla
-git clone https://github.com/your-org/compagent.git
-cd compagent
+git clone https://github.com/your-org/onvo.git
+cd onvo
 
 # Sanal ortam
 python -m venv .venv
