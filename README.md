@@ -13,7 +13,6 @@ Onvo; SaaS ürünlerini yöneten veya satan şirketlerin uygulamalarına kolayca
 - Ürün özellikleri ve dokümantasyonu üzerinden bilgi edinme
 - Gerçek zamanlı soru-cevap (chat) deneyimi
 - Kullanıcı girdisine göre yapılandırma ve entegrasyon yönlendirmesi
-- Satış sürecinde paket / fiyat önerisi
 - API ve entegrasyon adımlarını açıklama
 - Çoklu müşteri (multi-tenant) veri izolasyonu
 
@@ -107,17 +106,6 @@ pytest --maxfail=1 --disable-warnings -q
 | **Products**          | `/api/v1/products/`  | Ürün bilgileri, dokümantasyon bağlantıları ve entegrasyon detaylarını yönetmek için.  |
 | **Analytics**         | `/api/v1/analytics/` | Agent performans metrikleri, kullanıcı etkileşim verileri ve kullanım istatistikleri. |
 
-
-
-### Kullanım Senaryoları
-
-- Satış destek & paket önerisi
-- Teknik entegrasyon rehberliği
-- Ürün konfigürasyonu yönlendirme
-- Onboarding / eğitim
-- Self-servis destek
-
----
 
 ## 4. 🔧 Teknolojiler (Technologies Used)
 
