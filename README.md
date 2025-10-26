@@ -98,42 +98,16 @@ pytest --maxfail=1 --disable-warnings -q
 
 ![alt text](image-3.png)
 
-### Örnek API İstekleri
+### API Endpointleri
 
-Agent Listesi:
+| Kategori              | Endpoint             | Açıklama                                                                              |
+| --------------------- | -------------------- | ------------------------------------------------------------------------------------- |
+| **Agent**             | `/api/v1/agent/`     | Tek bir agent oluşturma, güncelleme veya silme işlemleri için kullanılır.             |
+| **Agents Management** | `/api/v1/agents`     | Sistemdeki tüm agent'ların listelenmesi veya filtrelenmesi için kullanılır.           |
+| **Products**          | `/api/v1/products/`  | Ürün bilgileri, dokümantasyon bağlantıları ve entegrasyon detaylarını yönetmek için.  |
+| **Analytics**         | `/api/v1/analytics/` | Agent performans metrikleri, kullanıcı etkileşim verileri ve kullanım istatistikleri. |
 
-```bash
-curl http://localhost:8000/api/v1/agents
-```
 
-Yeni Agent Oluşturma:
-
-```bash
-curl -X POST http://localhost:8000/api/v1/agents \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Destek Agentı","description":"Müşteri destek soruları","persona_role":"support"}'
-```
-
-Chat Mesajı Gönderme:
-
-```bash
-curl -X POST http://localhost:8000/api/v1/chat \
-  -H "Content-Type: application/json" \
-  -d '{"session_id":"s1","message":"Fiyatlandırma nasıl?"}'
-```
-
-WebSocket Chat Örneği:
-
-```python
-import websockets, asyncio, json
-
-async def run():
-    async with websockets.connect("ws://localhost:8000/ws/chat?session_id=s1") as ws:
-        await ws.send(json.dumps({"message": "Merhaba!"}))
-        print(await ws.recv())
-
-asyncio.run(run())
-```
 
 ### Kullanım Senaryoları
 
@@ -181,6 +155,6 @@ Client ─ REST / WS ─> FastAPI ──> Groq API
 
 ## 📩 İletişim
 
-Sorularınız için: [info@matreus.com](mailto:matreusbusiness@gmail.com)
+Sorularınız için: [matreusbusiness@gmail.com](mailto:matreusbusiness@gmail.com)
 
 ---
