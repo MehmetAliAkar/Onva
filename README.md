@@ -23,7 +23,7 @@ Onvo; SaaS ürünlerini yöneten veya satan şirketlerin uygulamalarına kolayca
 - Doküman + API endpoint + persona yönetimi tek ekranda
 - Guidance Agentlar yerine aksiyon alabilen agent
 
-![alt text](image-4.png)
+![alt text](docs/images/image-4.png)
 
 ---
 
@@ -91,11 +91,11 @@ pytest --maxfail=1 --disable-warnings -q
 4. Agent'ı chat arayüzünden test et
 5. Gerekirse güncelle / sil
 
-![alt text](image-1.png)
+![alt text](docs/images/image-1.png)
 
-![alt text](image-2.png)
+![alt text](docs/images/image-2.png)
 
-![alt text](image-3.png)
+![alt text](docs/images/image-3.png)
 
 ### API Endpointleri
 
