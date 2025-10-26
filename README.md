@@ -1,111 +1,166 @@
-# SaaS Product Agent Platform
-
-**Akıllı Ürün Satış ve Destek Agent'ı**
+# Onvo
+**Agent Üretim Platformu**
 
 ## 🎯 Proje Amacı
-
-Bu platform, üçüncü taraf uygulamaları satan SaaS şirketlerine entegre edilebilen akıllı bir agent çözümüdür. Agent:
-
-- ✅ Satılan ürünü derinlemesine bilir
-- ✅ Müşteri sorularını anlık cevaplayabilir
-- ✅ Kullanıcı girdilerine göre ürünü özelleştirir
-- ✅ Satış sürecini hızlandırır ve otomatikleştirir
+Bu platform, üçüncü taraf SaaS ürünlerini satan şirketlerin uygulamalarına entegre edilebilen akıllı bir agent üretim platformudur. Üretilen agentlar:
+- Ürünü derinlemesine bilir
+- Ürünün kullanıcı girdisiyle kullanımını sağlar
+- Müşteri sorularını anlık yanıtlar
+- Kullanıcı girdilerine göre yapılandırma önerir
+- Satış sürecini hızlandırır
+- Entegrasyon ve API konularını açıklar
+- Çoklu müşteri (multi-tenant) yapısını destekler
 
 ## 🏗️ Mimari
-
 ```
-┌─────────────────┐
-│  SaaS Platform  │
-└────────┬────────┘
-         │ API
-    ┌────▼─────────────────┐
-    │  Agent Platform      │
-    │  ├─ Knowledge Base   │
-    │  ├─ Q&A Engine       │
-    │  ├─ Config Manager   │
-    │  └─ Product Handler  │
-    └──────────────────────┘
+SaaS Uygulaması ──> REST / WebSocket
+        │
+        ▼
+┌────────────────────────────┐
+│        Agent Platform      │
+│  ├─ Knowledge Base         │  (Vektör Arama / Ürün Dokümanları)
+│  ├─ Q&A Engine             │  (Retrieval + LLM)
+│  ├─ Config Manager         │  (Özelleştirme Akışı)
+│  ├─ Product Handler        │  (Ürün Operasyonları)
+│  ├─ Session + Multi-tenant │
+│  └─ Analytics + Logging    │
+└────────────────────────────┘
 ```
 
 ## 📁 Proje Yapısı
-
 ```
-Compagent/
+Onvo/
 ├── agent/                 # Agent çekirdeği
 │   ├── knowledge_base/    # Ürün bilgi yönetimi
 │   ├── qa_engine/         # Soru-cevap motoru
 │   ├── config_manager/    # Ürün konfigürasyon yönetimi
 │   └── product_handler/   # Ürün işlemleri
-├── api/                   # REST API
-├── integrations/          # SaaS platform entegrasyonları
-├── models/                # Veri modelleri
-├── tests/                 # Test dosyaları
-└── docs/                  # Dokümantasyon
+├── api/                   # FastAPI servisleri
+├── integrations/          # SaaS entegrasyon adaptörleri
+├── models/                # Veri modelleri / ORM
+├── tests/                 # Testler
+├── docs/                  # Ek dokümantasyon
+└── README.md
 ```
 
-## 🚀 Hızlı Başlangıç
-
-```bash
-# Bağımlılıkları yükle
-pip install -r requirements.txt
-
-# Groq API Key alın: https://console.groq.com/
-# .env dosyasını düzenleyin ve GROQ_API_KEY ekleyin
-
-# Groq bağlantısını test edin
-python test_groq.py
-
-# Geliştirme sunucusunu başlat
-python main.py
-
-# API dokümantasyonu
-http://localhost:8000/docs
-```
-
-**Detaylı kurulum için**: [QUICKSTART.md](QUICKSTART.md) (5 dakika)
-
-## 💼 Kullanım Senaryoları
-
-### 1. Ürün Tanıtımı
-Agent, potansiyel müşterilere ürün özelliklerini detaylı anlatır.
-
-### 2. Teknik Sorular
-Entegrasyon, API kullanımı gibi teknik soruları cevaplayabilir.
-
-### 3. Özelleştirme ve Demo
-Müşteri ihtiyaçlarına göre ürünü anında yapılandırır ve demo sunar.
-
-### 4. Satış Desteği
-Fiyatlandırma, paket seçimi gibi konularda yardımcı olur.
+## ✅ Özellikler
+- Multi-tenant yapı
+- Özelleştirilebilir bilgi tabanı
+- Gerçek zamanlı chat (WebSocket)
+- API tabanlı entegrasyon
+- Analytics ve raporlama
+- Rate limiting + API Key auth
+- Cache / hızlandırma (Redis)
+- Vektör tabanlı bilgi erişimi
 
 ## 🔧 Teknoloji Stack
+| Katman        | Teknoloji |
+|---------------|-----------|
+| Backend       | Python, FastAPI |
+| LLM / AI      | Groq API (Llama 3.1 8B Instant) |
+| Veri          | PostgreSQL |
+| Vektör Arama  | (Seçilebilir: PGVectoR / Qdrant / Chroma) |
+| Cache         | Redis |
+| İletişim      | REST + WebSocket |
+| Test          | Pytest |
+| Ortam         | .env yapılandırması |
 
-- **Backend**: Python (FastAPI)
-- **AI/ML**: Groq API (Llama 3.1 8B Instant)
-- **Database**: PostgreSQL / Vector DB
-- **Cache**: Redis
-- **API**: REST, WebSocket
+## 📦 Gereksinimler
+- Python 3.10+
+- PostgreSQL
+- Redis
+- Groq API Key
 
-## 📊 Özellikler
+## 🚀 Kurulum
+```bash
+# Depoyu klonla
+git clone https://github.com/your-org/compagent.git
+cd compagent
 
-- [x] Multi-tenant yapı (birden fazla SaaS müşterisi)
-- [x] Özelleştirilebilir ürün bilgi tabanı
-- [x] Doğal dil işleme (NLP)
-- [x] Gerçek zamanlı chat desteği
-- [x] API tabanlı entegrasyon
-- [x] Analytics ve raporlama
+# Sanal ortam
+python -m venv .venv
+.\.venv\Scripts\activate
 
-## 🔐 Güvenlik
+# Bağımlılıklar
+pip install -r requirements.txt
+```
 
-- API Key authentication
-- Rate limiting
-- Data encryption
-- GDPR compliant
+### Ortam Değişkenleri (.env)
+```
+GROQ_API_KEY=xxx
+DATABASE_URL=postgresql://user:pass@localhost:5432/compagent
+REDIS_URL=redis://localhost:6379/0
+APP_ENV=development
+LOG_LEVEL=info
+```
 
-## 📝 Lisans
+### Groq Doğrulama
+```bash
+python test_groq.py
+```
 
-MIT License
+### Geliştirme Sunucusu
+```bash
+python main.py
+# veya
+uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
+```
+API Dokümantasyon: http://localhost:8000/docs
+
+## 🧪 Test Çalıştırma
+```bash
+pytest -q
+pytest --maxfail=1 --disable-warnings -q
+```
+
+## 🔌 Örnek API Kullanımı
+
+### 1. Agent Listesi
+```bash
+curl -H "X-API-KEY: YOUR_KEY" http://localhost:8000/api/v1/agents
+```
+
+### 2. Soru-Cevap (Chat)
+```bash
+curl -X POST http://localhost:8000/api/v1/chat \
+  -H "Content-Type: application/json" \
+  -H "X-API-KEY: YOUR_KEY" \
+  -d '{"session_id":"abc123","message":"Fiyatlandırma nasıl çalışıyor?"}'
+```
+
+### 3. Ürün Bilgisi Ekleme
+```bash
+curl -X POST http://localhost:8000/api/v1/knowledge \
+  -H "Content-Type: application/json" \
+  -d '{"product_id":"prod_1","content":"Yeni entegrasyon detayları..."}'
+```
+
+### 4. WebSocket Chat (Örnek)
+```python
+import websockets, asyncio, json
+
+async def run():
+    async with websockets.connect("ws://localhost:8000/ws/chat?session_id=abc123") as ws:
+        await ws.send(json.dumps({"message": "Merhaba, paket önerisi?"}))
+        msg = await ws.recv()
+        print(msg)
+
+asyncio.run(run())
+```
+
+## 🧩 Kullanım Senaryoları
+1. Ürün Tanıtımı: Özellik ve değer önerisi açıklama
+2. Teknik Destek: API entegrasyon adımları
+3. Demo / Özelleştirme: Kullanıcı girdisine göre yapılandırma
+4. Satış Yardımı: Paket seçimi, fiyat açıklama
+5. Eğitim / Onboarding: Yeni kullanıcı yönlendirme
+
+
+## 👥 Ekip
+| Mehmet Ali Akar | meakar@matreus.com |
+| Resül Dinç | rdinc@matreus.com |
+| Utku Aydın | uaydin@matreus.com |
+
 
 ## 📧 İletişim
-
-Daha fazla bilgi için: info@compagent.com
+info@matreus.com
