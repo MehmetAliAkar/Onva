@@ -181,6 +181,6 @@ Client ─ REST / WS ─> FastAPI ──> Groq API
 
 ## 📩 İletişim
 
-Sorularınız için: [info@matreus.com](mailto:info@matreus.com)
+Sorularınız için: [info@matreus.com](mailto:matreusbusiness@gmail.com)
 
 ---
