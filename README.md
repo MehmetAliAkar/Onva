@@ -1,166 +1,182 @@
-# Onvo
-**Agent Üretim Platformu**
+# Llama Meta Hackathon
 
-## 🎯 Proje Amacı
-Bu platform, üçüncü taraf SaaS ürünlerini satan şirketlerin uygulamalarına entegre edilebilen akıllı bir agent üretim platformudur. Üretilen agentlar:
-- Ürünü derinlemesine bilir
-- Ürünün kullanıcı girdisiyle kullanımını sağlar
-- Müşteri sorularını anlık yanıtlar
-- Kullanıcı girdilerine göre yapılandırma önerir
-- Satış sürecini hızlandırır
-- Entegrasyon ve API konularını açıklar
-- Çoklu müşteri (multi-tenant) yapısını destekler
+# Onva – Agent Üretim Platformu
 
-## 🏗️ Mimari
-```
-SaaS Uygulaması ──> REST / WebSocket
-        │
-        ▼
-┌────────────────────────────┐
-│        Agent Platform      │
-│  ├─ Knowledge Base         │  (Vektör Arama / Ürün Dokümanları)
-│  ├─ Q&A Engine             │  (Retrieval + LLM)
-│  ├─ Config Manager         │  (Özelleştirme Akışı)
-│  ├─ Product Handler        │  (Ürün Operasyonları)
-│  ├─ Session + Multi-tenant │
-│  └─ Analytics + Logging    │
-└────────────────────────────┘
-```
+SaaS ürünleri için akıllı destek ve konfigurasyon agent'ları oluşturmanızı sağlayan platform.
 
-## 📁 Proje Yapısı
-```
-Onvo/
-├── agent/                 # Agent çekirdeği
-│   ├── knowledge_base/    # Ürün bilgi yönetimi
-│   ├── qa_engine/         # Soru-cevap motoru
-│   ├── config_manager/    # Ürün konfigürasyon yönetimi
-│   └── product_handler/   # Ürün işlemleri
-├── api/                   # FastAPI servisleri
-├── integrations/          # SaaS entegrasyon adaptörleri
-├── models/                # Veri modelleri / ORM
-├── tests/                 # Testler
-├── docs/                  # Ek dokümantasyon
-└── README.md
-```
+---
 
-## ✅ Özellikler
-- Multi-tenant yapı
-- Özelleştirilebilir bilgi tabanı
-- Gerçek zamanlı chat (WebSocket)
-- API tabanlı entegrasyon
-- Analytics ve raporlama
-- Rate limiting + API Key auth
-- Cache / hızlandırma (Redis)
-- Vektör tabanlı bilgi erişimi
+## 1. 📘 Proje Açıklaması & Amacı
 
-## 🔧 Teknoloji Stack
-| Katman        | Teknoloji |
-|---------------|-----------|
-| Backend       | Python, FastAPI |
-| LLM / AI      | Groq API (Llama 3.1 8B Instant) |
-| Veri          | PostgreSQL |
-| Vektör Arama  | (Seçilebilir: PGVectoR / Qdrant / Chroma) |
-| Cache         | Redis |
-| İletişim      | REST + WebSocket |
-| Test          | Pytest |
-| Ortam         | .env yapılandırması |
+Onvo; SaaS ürünlerini yöneten veya satan şirketlerin uygulamalarına kolayca entegre edilebilen, ürün bilgisini öğrenen ve son kullanıcıyla etkileşime giren akıllı agent'lar üretmek için tasarlanmış bir platformdur.
 
-## 📦 Gereksinimler
+### Neler Sağlar?
+
+- Ürün özellikleri ve dokümantasyonu üzerinden bilgi edinme
+- Gerçek zamanlı soru-cevap (chat) deneyimi
+- Kullanıcı girdisine göre yapılandırma ve entegrasyon yönlendirmesi
+- Satış sürecinde paket / fiyat önerisi
+- API ve entegrasyon adımlarını açıklama
+- Çoklu müşteri (multi-tenant) veri izolasyonu
+
+### Fark Yaratan Özellikler
+
+- Vektör tabanlı semantik bilgi erişimi
+- Özelleştirilebilir persona ve rol tanımları
+- Doküman + API endpoint + persona yönetimi tek ekranda
+- Guidance Agentlar yerine aksiyon alabilen agent
+
+---
+
+## 2. 🛠 Kurulum (Installation)
+
+### Gereksinimler
+
 - Python 3.10+
 - PostgreSQL
 - Redis
 - Groq API Key
 
-## 🚀 Kurulum
+### Depoyu Klonla
+
 ```bash
-# Depoyu klonla
 git clone https://github.com/your-org/onvo.git
 cd onvo
+```
 
-# Sanal ortam
+### Sanal Ortam ve Bağımlılıklar
+
+```bash
 python -m venv .venv
-.\.venv\Scripts\activate
-
-# Bağımlılıklar
+source .venv/Scripts/activate  # Windows PowerShell: .\.venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### Ortam Değişkenleri (.env)
-```
+### Ortam Değişkenleri (.env Örneği)
+
+```env
 GROQ_API_KEY=xxx
-DATABASE_URL=postgresql://user:pass@localhost:5432/compagent
+DATABASE_URL=postgresql://user:pass@localhost:5432/onvo
 REDIS_URL=redis://localhost:6379/0
 APP_ENV=development
 LOG_LEVEL=info
+SECRET_KEY=change_me_dev
 ```
 
-### Groq Doğrulama
-```bash
-python test_groq.py
-```
+### Çalıştırma
 
-### Geliştirme Sunucusu
 ```bash
 python main.py
 # veya
-uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
-API Dokümantasyon: http://localhost:8000/docs
 
-## 🧪 Test Çalıştırma
+Dokümantasyon: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+### Testler
+
 ```bash
 pytest -q
 pytest --maxfail=1 --disable-warnings -q
 ```
 
-## 🔌 Örnek API Kullanımı
+---
 
-### 1. Agent Listesi
+## 3. 🚀 Kullanım Rehberi (Usage Guide)
+
+### Temel Akış
+
+1. Yeni agent oluştur: Persona + açıklama ekle
+2. Ürün dokümanlarını yükle
+3. API endpoint'lerini tanımla (metod, URL, istek/yanıt örnekleri)
+4. Agent'ı chat arayüzünden test et
+5. Gerekirse güncelle / sil
+
+
+
+### Örnek API İstekleri
+
+Agent Listesi:
+
 ```bash
-curl -H "X-API-KEY: YOUR_KEY" http://localhost:8000/api/v1/agents
+curl http://localhost:8000/api/v1/agents
 ```
 
-### 2. Soru-Cevap (Chat)
+Yeni Agent Oluşturma:
+
+```bash
+curl -X POST http://localhost:8000/api/v1/agents \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Destek Agentı","description":"Müşteri destek soruları","persona_role":"support"}'
+```
+
+Chat Mesajı Gönderme:
+
 ```bash
 curl -X POST http://localhost:8000/api/v1/chat \
   -H "Content-Type: application/json" \
-  -H "X-API-KEY: YOUR_KEY" \
-  -d '{"session_id":"abc123","message":"Fiyatlandırma nasıl çalışıyor?"}'
+  -d '{"session_id":"s1","message":"Fiyatlandırma nasıl?"}'
 ```
 
-### 3. Ürün Bilgisi Ekleme
-```bash
-curl -X POST http://localhost:8000/api/v1/knowledge \
-  -H "Content-Type: application/json" \
-  -d '{"product_id":"prod_1","content":"Yeni entegrasyon detayları..."}'
-```
+WebSocket Chat Örneği:
 
-### 4. WebSocket Chat (Örnek)
 ```python
 import websockets, asyncio, json
 
 async def run():
-    async with websockets.connect("ws://localhost:8000/ws/chat?session_id=abc123") as ws:
-        await ws.send(json.dumps({"message": "Merhaba, paket önerisi?"}))
-        msg = await ws.recv()
-        print(msg)
+    async with websockets.connect("ws://localhost:8000/ws/chat?session_id=s1") as ws:
+        await ws.send(json.dumps({"message": "Merhaba!"}))
+        print(await ws.recv())
 
 asyncio.run(run())
 ```
 
-## 🧩 Kullanım Senaryoları
-1. Ürün Tanıtımı: Özellik ve değer önerisi açıklama
-2. Teknik Destek: API entegrasyon adımları
-3. Demo / Özelleştirme: Kullanıcı girdisine göre yapılandırma
-4. Satış Yardımı: Paket seçimi, fiyat açıklama
-5. Eğitim / Onboarding: Yeni kullanıcı yönlendirme
+### Kullanım Senaryoları
 
+- Satış destek & paket önerisi
+- Teknik entegrasyon rehberliği
+- Ürün konfigürasyonu yönlendirme
+- Onboarding / eğitim
+- Self-servis destek
 
-## 👥 Ekip
-| Mehmet Ali Akar | meakar@matreus.com |
-| Resül Dinç | rdinc@matreus.com |
-| Utku Aydın | uaydin@matreus.com |
+---
 
+## 4. 🔧 Teknolojiler (Technologies Used)
 
-## 📧 İletişim
-info@matreus.com
+| Katman | Teknoloji |
+|--------|-----------|
+| Backend | Python (FastAPI) |
+| AI / LLM | Groq API (Llama 3.1 8B Instant) |
+| Veri | PostgreSQL |
+| Vektör Arama | ChromaDB (opsiyonel: Qdrant / PGVector) |
+| Cache | Redis |
+| İletişim | REST + WebSocket |
+| Test | Pytest |
+| Ortam | pydantic-settings / .env |
+
+### Mimarinin Özeti
+
+```text
+Client ─ REST / WS ─> FastAPI ──> Groq API
+                 │
+                 ├─ Vector Store (Chroma)
+                 ├─ Document Processing
+                 ├─ Endpoint Registry
+                 └─ Persona / Prompt Yönetimi
+```
+
+---
+
+## 5. 👥 Matreus Team Members
+
+| Mehmet Ali Akar|
+| Resül Dinç|
+| Utku Aydın|
+
+---
+
+## 📩 İletişim
+
+Sorularınız için: [info@matreus.com](mailto:info@matreus.com)
+
+---

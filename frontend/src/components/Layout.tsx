@@ -34,9 +34,9 @@ export default function Layout({ children }: LayoutProps) {
             {sidebarOpen && (
               <div className="animate-slide-down">
                 <h1 className="text-xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-                  AgentPro
+                  Onva
                 </h1>
-                <p className="text-xs text-gray-400">AI Agent Platform</p>
+                <p className="text-xs text-gray-400">Agent Builder Platform</p>
               </div>
             )}
           </div>
@@ -96,11 +96,11 @@ export default function Layout({ children }: LayoutProps) {
           <div className="p-4 border-t border-gray-700/50 backdrop-blur-sm">
             <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 cursor-pointer group">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold shadow-md group-hover:scale-110 transition-transform">
-                U
+                M
               </div>
               <div className="flex-1">
-                <p className="text-sm font-semibold text-white">User Name</p>
-                <p className="text-xs text-gray-400">user@company.com</p>
+                <p className="text-sm font-semibold text-white">Matreus</p>
+                <p className="text-xs text-gray-400">info@matreus.com</p>
               </div>
             </div>
           </div>
@@ -124,11 +124,7 @@ export default function Layout({ children }: LayoutProps) {
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 border border-blue-100">
                   <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-                  <span className="text-sm font-semibold text-blue-700">3 Active Agents</span>
-                </div>
-                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-50 border border-purple-100">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
-                  <span className="text-sm font-semibold text-purple-700">1.2k API Calls Today</span>
+                  <span className="text-sm font-semibold text-blue-700">2 Active Agents</span>
                 </div>
               </div>
             </div>
